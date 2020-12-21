@@ -13,6 +13,8 @@ namespace Actor
         public float PointOfView;
         public float RadiusOfView;
         public int RayCount;
+        public int Ammo;
+        public int DefaultAmmo;
         public ActorState State;
         public ActorColor Color;
 

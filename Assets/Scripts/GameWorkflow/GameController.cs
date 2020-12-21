@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Actor;
-using Root;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Weapon;
@@ -47,6 +45,8 @@ namespace GameWorkflow
             CreateActors(actorCountToSpawnOnStartGame, ActorColor.Blue);
 
             StartGame(playerModels.ToArray());
+            CreateActors(actorCountOnStartGame - actorCountToSpawnOnStartGame, ActorColor.Red);
+            CreateActors(actorCountOnStartGame - actorCountToSpawnOnStartGame, ActorColor.Blue);
         }
 
         private void Update()
@@ -67,7 +67,7 @@ namespace GameWorkflow
                     }
                 }
 
-                if (playerModels.All(x => x.State == ActorState.Finished))
+                if (playerModels.All(x => x.State == ActorState.Finished || x.State == ActorState.Created))
                 {
                     _isGameEnd = true;
                     panel.SetActive(true);
@@ -89,6 +89,8 @@ namespace GameWorkflow
                 actors.Add(new PlayerModel
                 {
                     Name = $"{color} {names[Random.Range(0, names.Count)]}",
+                    DefaultAmmo = defaultModel.DefaultAmmo,
+                    Ammo = defaultModel.DefaultAmmo,
                     Color = color,
                     Health = defaultModel.Health,
                     Speed = defaultModel.Speed,
@@ -156,9 +158,9 @@ namespace GameWorkflow
 
         public void SpawnRed()
         {
-            if (playerModels.Count(x => x.Color == ActorColor.Red) < actorCountOnStartGame)
+            if (_units.Count(x => x.PlayerModel.Color == ActorColor.Red) < actorCountOnStartGame)
             {
-                var unit = SpawnUnit(CreateActors(1, ActorColor.Red)[0]);
+                var unit = SpawnUnit(playerModels.First(x => x.State == ActorState.Created && x.Color == ActorColor.Red));
                 _ai.AddActors(unit);
                 _units.Add(unit);
             }
@@ -167,9 +169,9 @@ namespace GameWorkflow
 
         public void SpawnBlue()
         {
-            if (playerModels.Count(x => x.Color == ActorColor.Blue) < actorCountOnStartGame)
+            if (_units.Count(x => x.PlayerModel.Color == ActorColor.Blue) < actorCountOnStartGame)
             {
-                var unit = SpawnUnit(CreateActors(1, ActorColor.Blue)[0]);
+                var unit = SpawnUnit(playerModels.First(x => x.State == ActorState.Created && x.Color == ActorColor.Blue));
                 _ai.AddActors(unit);
                 _units.Add(unit);
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Actor;
 using UnityEngine;
 
 namespace Weapon
@@ -38,6 +39,12 @@ namespace Weapon
 
         private float _lastTimeFire;
         private Sprite _sprite;
+        private PlayerModel _model;
+
+        private void Start()
+        {
+            _model = GetComponent<ActorTag>().PlayerModel;
+        }
 
         private void Update()
         {
@@ -57,8 +64,9 @@ namespace Weapon
         public void Attack()
         {
             var currWeapon = _weaponInfos[currentWeapon];
-            if (_lastTimeFire > currWeapon.FireRate)
+            if (_lastTimeFire > currWeapon.FireRate && _model.Ammo > 0)
             {
+                _model.Ammo--;
                 SpawnBullet(currWeapon);
                 _lastTimeFire = 0;
             }

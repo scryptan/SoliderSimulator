@@ -32,9 +32,11 @@ namespace Root
                 a.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = coloredPlayerModels[i].Name;
                 var status = coloredPlayerModels[i].Health == 0 ? "Dead" : "Hurted";
                 if (Math.Abs(coloredPlayerModels[i].Health - 100) < 0.1)
-                    status = "Best";
+                    status = "In Stock";
                 a.transform.Find("Status").GetComponent<TextMeshProUGUI>().text =
                     $"{status}: {coloredPlayerModels[i].Health}";
+                a.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text =
+                    $"{coloredPlayerModels[i].Ammo}/{coloredPlayerModels[i].DefaultAmmo}";
             }
         }
     }
